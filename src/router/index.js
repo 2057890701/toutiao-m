@@ -1,22 +1,49 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import HomeView from '../views/HomeView.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
+
+  { path: '/login', component: () => import('@/views/login'), name: 'login' },
   {
     path: '/',
-    name: 'home',
-    component: HomeView
+    component: () => import('@/views/layout'),
+    // name: 'layout', // 如果父路由有默认子路由，那他的name就没有意义，可以省略
+    children: [
+      {
+        path: '',  // 默认子路由，只能有一个，当访问/的时候，显示home组件
+        component: () => import('@/views/home'),
+        name: 'home'
+      },
+      {
+        path: '/qa',
+        component: () => import('@/views/qa'),
+        name: 'qa'
+      },
+      {
+        path: '/video',
+        component: () => import('@/views/video'),
+        name: 'video'
+      },
+      {
+        path: '/my',
+        component: () => import('@/views/my'),
+        name: 'my'
+      },
+    ]
+  },
+  { path: '/search', component: () => import('@/views/search'), name: 'search' },
+  {
+    path: '/article/:articleId',
+    component: () => import('@/views/article'),
+    name: 'article',
+    props: true // 通过声明props: true 就把路径的动态参数作为父子通信props传递给article组件
   },
   {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
+    path: '/user/profile',
+    name: 'user-profile',
+    component: () => import('@/views/user-profile'),
   }
 ]
 
